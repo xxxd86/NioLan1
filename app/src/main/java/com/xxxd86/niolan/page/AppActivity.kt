@@ -5,8 +5,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.xxxd86.niobase.base.baseActivity.BaseActivityLate
 import com.xxxd86.niobase.base.baseActivity.BaseVMActivity
@@ -32,6 +34,7 @@ class AppActivity : BaseVMActivity<AppViewModel,ActivityAppBinding>(ActivityAppB
     private val REQUEST_CODE = 1024
     @SuppressLint("CommitTransaction")
     override fun initView() {
+        Log.v("AppActivity","startView")
         contentId = binding.container.id
         initFirstFragment()
         binding.navBottom.setOnItemSelectedListener {item->
@@ -84,6 +87,11 @@ class AppActivity : BaseVMActivity<AppViewModel,ActivityAppBinding>(ActivityAppB
 
     override fun onLanguageChange(onSuccess: () -> Unit): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
     }
 
     override fun onScreanChange(onSuccess: () -> Unit) {
