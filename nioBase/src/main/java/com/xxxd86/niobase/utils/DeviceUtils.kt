@@ -2,9 +2,11 @@ package com.xxxd86.niobase.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
@@ -13,6 +15,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import java.util.Locale
 
@@ -21,6 +24,7 @@ import java.util.Locale
  * 页面控制以及权限控制
  */
 object DeviceUtils {
+    private val REQUEST_CODE = 1024
     /**
      * 整个页面都是图片，隐藏状态栏和底部导航栏。
      */
@@ -50,7 +54,7 @@ object DeviceUtils {
      */
     private fun setFullScreenWithStateBar(activity: AppCompatActivity?){
         activity?.window?.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAGS_CHANGED,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
     }
@@ -73,7 +77,7 @@ object DeviceUtils {
         if (lacksPermission(activity.applicationContext,mPermissions)) {
 
             lackPermission.invoke()
-            ActivityCompat.requestPermissions(
+            requestPermissions(
                 activity, arrayOf(mPermissions),
                 1
             )
@@ -96,7 +100,7 @@ object DeviceUtils {
             Manifest.permission.RECORD_AUDIO
         )
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
+            requestPermissions(
                 activity, PERMISSION_AUDIO,
                 GET_RECODE_AUDIO
             )
@@ -133,6 +137,42 @@ object DeviceUtils {
         val locale = Locale.getDefault()
         return LocalUtil.getString(locale)
     }
+    fun getFilePermission(application: AppCompatActivity){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // 先判断有没有权限
+                if (Environment.isExternalStorageManager()) {
+
+                } else {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    intent.setData(Uri.parse("package:" + application.applicationContext.getPackageName()))
+                    application.startActivityForResult(intent, REQUEST_CODE)
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // 先判断有没有权限
+                if (ActivityCompat.checkSelfPermission(
+                        application,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(
+                        application,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+
+                } else {
+                    requestPermissions(
+                        application,
+                        arrayOf<String>(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ),
+                        REQUEST_CODE
+                    )
+                }
+            } else {
+            }
+
+    }
 }
 
 /**
@@ -141,6 +181,7 @@ object DeviceUtils {
  * 1.全屏 —— 广告加载
  * 2.状态栏符合最近的颜色状态
  * 3.普通状态,无状态栏
+ * 4.收起特殊栏保留状态栏
  */
 enum class ScreenState{
       STATE_FULL,STATE_PAT,STATE_COM

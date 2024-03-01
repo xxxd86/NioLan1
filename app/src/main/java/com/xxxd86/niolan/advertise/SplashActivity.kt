@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import com.xxxd86.niobase.base.baseActivity.BaseLoadingActivity
+import com.xxxd86.niobase.base.baseService.BaseRNService
 import com.xxxd86.niolan.R
 import com.xxxd86.niolan.databinding.ActivitySplashBinding
 import com.xxxd86.niolan.page.AppActivity
@@ -49,7 +50,8 @@ class SplashActivity : BaseLoadingActivity<SplashViewModel, ActivitySplashBindin
 //                  }
 //            }
 
-
+        val intent = Intent(this, BaseRNService::class.java) //处理resource文件以及debugText文件的创立
+        startService(intent)
         loadAd()
     }
     private fun jump(){
