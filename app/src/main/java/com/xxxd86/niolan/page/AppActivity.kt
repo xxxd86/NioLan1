@@ -6,13 +6,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.xxxd86.niobase.base.baseActivity.BaseActivityLate
 import com.xxxd86.niobase.base.baseActivity.BaseVMActivity
-import com.xxxd86.niobase.base.baseService.BaseRNService
 import com.xxxd86.niobase.base.broadcast.BaseBroadCast
 import com.xxxd86.niolan.R
 import com.xxxd86.niolan.databinding.ActivityAppBinding
@@ -32,6 +31,20 @@ class AppActivity : BaseVMActivity<AppViewModel,ActivityAppBinding>(ActivityAppB
     private var contentId = -1
     private var lastShowFragment: Fragment? = null
     private val REQUEST_CODE = 1024
+
+    fun getpermission(){
+        val OVERLAY_PERMISSION_REQ_CODE = 1;  // 任写一个值
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                val intent =  Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName"));
+                startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+            }
+        }
+    }
     @SuppressLint("CommitTransaction")
     override fun initView() {
         Log.v("AppActivity","startView")

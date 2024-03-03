@@ -59,5 +59,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
+    implementation("com.facebook.react:react-native:^0.73.5")
+    implementation ("com.facebook.react:react-android")
+    implementation ("com.facebook.react:hermes-android")
+    implementation("com.facebook.react:react-native-gradle-plugin")
 }

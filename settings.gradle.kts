@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "niolan"
 include(":app")
 include(":nioBase")
+includeBuild("./node_modules/@react-native/gradle-plugin")

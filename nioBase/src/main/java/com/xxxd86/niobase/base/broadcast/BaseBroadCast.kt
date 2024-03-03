@@ -22,4 +22,7 @@ object BaseBroadCast {
         filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED)
         application.registerReceiver(uiModeChangeReceiver,filter)
     }
+    fun sendNotification(){
+
+    }
 }
